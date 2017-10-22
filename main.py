@@ -87,3 +87,12 @@ X = train_np[:, 1:]
 # fit到RandomForestRegressor之中
 clf = linear_model.LogisticRegression(C=1.0, penalty='l1', tol=1e-6)
 clf.fit(X, y)
+
+test_df = data_test.filter(regex='Age_.*|SibSp|Parch|Fare_.*|Cabin_.*|Embarked_.*|Sex_.*|Pclass_.*')
+predictions = clf.predict(test_df)
+
+result = DataFrame({
+    'PassengerId': data_test['PassengerId'],
+    'Survived': predictions.astype(np.int32)
+})
+result.to_csv('./data/logistic_prediction.csv', index=False)
